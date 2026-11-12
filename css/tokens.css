@@ -1,0 +1,89 @@
+/* Spirit Camp Handbook — brand book tokens.
+   Source of truth: design/brand/SPIRIT_CAMP_CORE_BRAND.md. Never type a hex inside a component;
+   use these variables. Shades/tints may be derived with color-mix() from these only. */
+/* Handwriting (Caveat, OFL, not a brand font): self-hosted, no third-party request. One variable file covers 500 and 600. */
+@font-face{font-family:"Caveat";src:url("../assets/fonts/Caveat-latin-ext.woff2") format("woff2");font-weight:400 700;font-style:normal;font-display:swap;unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:"Caveat";src:url("../assets/fonts/Caveat-latin.woff2") format("woff2");font-weight:400 700;font-style:normal;font-display:swap;unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+
+/* ---- Brand fonts, from Spirit Camp BRANDING & MARKETING > SC Brand Typography Assets ----
+   Black Magic Slab Serif has one style. It is declared for every weight and for both normal and
+   italic so the browser never fakes a bold or a slant on top of it. */
+@font-face{font-family:"Black Magic";src:url("../assets/fonts/BlackMagicSlabSerif.woff2") format("woff2");font-weight:100 900;font-style:normal;font-display:swap}
+@font-face{font-family:"Black Magic";src:url("../assets/fonts/BlackMagicSlabSerif.woff2") format("woff2");font-weight:100 900;font-style:italic;font-display:swap}
+@font-face{font-family:"Anonymous Pro";src:url("../assets/fonts/AnonymousPro-Regular.woff2") format("woff2");font-weight:100 500;font-style:normal;font-display:swap}
+@font-face{font-family:"Anonymous Pro";src:url("../assets/fonts/AnonymousPro-Bold.woff2") format("woff2");font-weight:600 900;font-style:normal;font-display:swap}
+@font-face{font-family:"Anonymous Pro";src:url("../assets/fonts/AnonymousPro-Italic.woff2") format("woff2");font-weight:100 500;font-style:italic;font-display:swap}
+@font-face{font-family:"Anonymous Pro";src:url("../assets/fonts/AnonymousPro-BoldItalic.woff2") format("woff2");font-weight:600 900;font-style:italic;font-display:swap}
+
+:root{
+  /* ---- grounds ---- */
+  --warm-white:#FFFAF4;  --cream:#FBF2E5;  --oat:#F4EAD9;  --blush:#F9DFD3;
+  /* ---- primary ---- */
+  --rust:#BC6A37;  --olive:#5F6742;  --lavender:#817EB9;
+  /* ---- secondary ---- */
+  --marigold:#F2B739;  --forest:#37524F;  --periwinkle:#C4CFEF;  --peach:#F4C5B4;
+  /* ---- soft ---- */
+  --butter:#F2EAB7;  --lime-sage:#BBCD7D;  --pale-lime:#CCDD91;  --indigo:#494E74;
+  --terracotta:#E49D80;  --walnut:#7C522E;
+  /* ---- accents / text ---- */
+  --rose-brown:#A06360;  --charcoal:#3B3D3C;
+  /* ---- from the official camp map (Spirit Camp graphics) ---- */
+  --map-sage:#E1E4D5;      /* map ground */
+  --pine-dark:#2F6B57;     /* map pine, dark */
+  --pine-light:#8FB3A0;    /* map pine, light */
+
+  /* ---- roles ---- */
+  --ground: var(--warm-white);
+  /* Paper (round 6): close to the page ground, only a hint warmer than Warm White. */
+  --paper: #fef8f0;
+  --ink: var(--charcoal);          /* text and line work */
+  --ink-soft: #71706b;
+  --line: var(--forest);           /* default line-art stroke */
+
+  /* ---- type (brand roles) ----
+     Heading: Black Magic Slab Serif (brand file, loaded above).
+     Subheading: Helvetica Bold. Body: Helvetica Light (system Helvetica Neue on Apple devices;
+     not in the brand font folder, falls back to Arial elsewhere). Section: Anonymous Pro (brand file).
+     Handwriting: not in the brand; Caveat / Kalam are candidates for the field-notes layer. */
+  --f-head: "Black Magic", Georgia, serif;
+  --f-sub: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --f-body: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --f-section: "Anonymous Pro", "Courier New", monospace;
+  --f-hand: "Caveat", "Bradley Hand", cursive;
+  --f-hand-alt: "Kalam", "Bradley Hand", cursive;
+
+  /* ---- tape (round 4: clear beige is the default; color tape is an occasional accent) ---- */
+  --tape-clear: rgba(244,234,217,0.58);
+  --tape-clear-edge: rgba(124,82,46,0.14);
+
+  /* ---- shape, depth ---- */
+  --radius-card: 18px;
+  --radius-sm: 6px;
+  --shadow-paper: 0 1px 0 rgba(59,61,60,.10), 0 10px 24px rgba(59,61,60,.12);
+  --shadow-hard: 4px 4px 0 var(--charcoal);
+}
+
+/* Headline: brand display face, set like the Color Guide ("Sound Healing") */
+.h-display{font-family:var(--f-head);font-style:italic;font-weight:800;
+  font-variation-settings:"SOFT" 100,"WONK" 0;letter-spacing:-.01em;line-height:1.02}
+.h-sub{font-family:var(--f-sub);font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+.t-body{font-family:var(--f-body);font-weight:300;line-height:1.6}
+.t-section{font-family:var(--f-section);text-transform:uppercase;letter-spacing:.14em}
+.t-hand{font-family:var(--f-hand);font-weight:500;line-height:1.05}
+
+/* Approved color pairings: ground / headline / body (Color Guide p3) */
+.pair-rust{background:var(--rust);--hl:var(--periwinkle);--tx:var(--warm-white)}
+.pair-olive{background:var(--olive);--hl:var(--peach);--tx:var(--warm-white)}
+.pair-lavender{background:var(--lavender);--hl:var(--pale-lime);--tx:var(--warm-white)}
+.pair-marigold{background:var(--marigold);--hl:var(--forest);--tx:var(--charcoal)}
+.pair-forest{background:var(--forest);--hl:var(--marigold);--tx:var(--warm-white)}
+.pair-periwinkle{background:var(--periwinkle);--hl:var(--rust);--tx:var(--charcoal)}
+.pair-peach{background:var(--peach);--hl:var(--olive);--tx:var(--charcoal)}
+.pair-oat{background:var(--oat);--hl:var(--forest);--tx:var(--charcoal)}
+.pair-butter{background:var(--butter);--hl:var(--lavender);--tx:var(--charcoal)}
+.pair-lime{background:var(--lime-sage);--hl:var(--lavender);--tx:var(--charcoal)}
+.pair-indigo{background:var(--indigo);--hl:var(--butter);--tx:var(--warm-white)}
+.pair-terracotta{background:var(--terracotta);--hl:var(--butter);--tx:var(--charcoal)}
+.pair-walnut{background:var(--walnut);--hl:var(--periwinkle);--tx:var(--warm-white)}
+[class*="pair-"]{color:var(--tx)}
+[class*="pair-"] .hl{color:var(--hl)}

@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Camp Counselor Reunion</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#FFFAF4">
+<link rel="icon" href="/camp-counselor-reunion/assets/icons/favicon.ico" sizes="48x48">
+<link rel="icon" href="/camp-counselor-reunion/assets/icons/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="/camp-counselor-reunion/assets/icons/apple-touch-icon.png">
+<!-- GitHub Pages serves this page for any missing address under /camp-counselor-reunion/, at any depth, so it is
+     self-contained: inline styles, full /camp-counselor-reunion/ paths, no other stylesheet or script.
+     The look: one printed page from the handbook (paper, forest double frame, Black Magic title, the B3 compass,
+     one B4 button). Tokens below are copied from site/css/tokens.css + base.css (the subset this page uses). -->
+<style>
+  @font-face{font-family:"Black Magic";src:url("/camp-counselor-reunion/assets/fonts/BlackMagicSlabSerif.woff2") format("woff2");font-weight:100 900;font-style:normal;font-display:swap}
+  @font-face{font-family:"Black Magic";src:url("/camp-counselor-reunion/assets/fonts/BlackMagicSlabSerif.woff2") format("woff2");font-weight:100 900;font-style:italic;font-display:swap}
+  @font-face{font-family:"Anonymous Pro";src:url("/camp-counselor-reunion/assets/fonts/AnonymousPro-Regular.woff2") format("woff2");font-weight:100 500;font-style:normal;font-display:swap}
+  :root{
+    --warm-white:#FFFAF4;--cream:#FBF2E5;--rust:#BC6A37;--marigold:#F2B739;--forest:#37524F;--charcoal:#3B3D3C;
+    --ground:var(--warm-white);--paper:#fef8f0;--line:var(--forest);
+    --hair:rgba(59,61,60,0.16);
+    --page-edge:0 1px 2px rgba(59,61,60,0.1),
+      3px 3px 0 -1px var(--paper),3px 3px 0 0 rgba(59,61,60,0.18),
+      6px 6px 0 -1px var(--paper),6px 6px 0 0 rgba(59,61,60,0.13);
+    --f-head:"Black Magic",Georgia,serif;--f-section:"Anonymous Pro","Courier New",monospace;
+  }
+  *,*::before,*::after{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;min-height:100vh;min-height:100svh;display:grid;place-items:center;background:var(--ground);color:var(--charcoal);
+    padding:max(24px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) max(24px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left));
+    font:300 18px/1.6 "Helvetica Neue",Helvetica,Arial,sans-serif}
+  .page{position:relative;width:100%;max-width:560px;padding:58px 28px 54px;background:var(--paper);border:1px solid var(--hair);
+    box-shadow:var(--page-edge);text-align:center}
+  .page::before{content:"";position:absolute;inset:10px;border:2px solid var(--line);pointer-events:none}
+  .page::after{content:"";position:absolute;inset:15px;border:1px solid var(--line);pointer-events:none}
+  .folio{margin:0 0 22px;font:400 13px/1 var(--f-section);letter-spacing:.2em;text-transform:uppercase;color:var(--forest)}
+  .mark{display:block;width:64px;height:64px;margin:0 auto 18px}
+  h1{margin:0 auto 32px;max-width:10em;font:800 italic clamp(34px,8.6vw,46px)/1.02 var(--f-head);letter-spacing:-.01em;color:var(--forest);text-wrap:balance}
+  .btn{--sx:4px;--sy:4px;--tx:0px;--ty:0px;display:inline-flex;max-width:100%;text-decoration:none;
+    transform:translate(var(--tx),var(--ty));transition:transform .12s ease}
+  .btn .face{display:inline-flex;align-items:center;justify-content:center;min-height:52px;padding:8px 28px;
+    background:var(--rust);color:var(--warm-white);border:3px solid var(--charcoal);border-radius:14px;
+    box-shadow:var(--sx) var(--sy) 0 var(--charcoal);font:800 italic 21px/1.15 var(--f-head);transition:box-shadow .12s ease}
+  @media (hover:hover){.btn:hover{--sx:7px;--sy:7px;--tx:-3px;--ty:-3px}}
+  .btn:active{--sx:0px;--sy:0px;--tx:4px;--ty:4px}
+  .btn:focus-visible{outline:3px solid var(--forest);outline-offset:7px}
+  @media (prefers-reduced-motion:reduce){.btn,.btn .face{transition:none}}
+</style>
+</head>
+<body>
+  <main class="page">
+    <p class="folio">Page 404</p>
+    <!-- B3 compass (line-art-sprite.svg #la-compass), exact geometry -->
+    <svg class="mark" viewBox="0 0 40 40" aria-hidden="true" focusable="false"><circle cx="20" cy="20" r="17" style="stroke:var(--forest);stroke-width:2.5;stroke-linejoin:round;stroke-linecap:round;fill:var(--marigold)"/><path d="M20 7 L24 20 L20 33 L16 20 Z" style="stroke:var(--forest);stroke-width:1.7;stroke-linejoin:round;stroke-linecap:round;fill:var(--rust)"/><path d="M20 20 L24 20 L20 33 L16 20 Z" style="stroke:var(--forest);stroke-width:1.7;stroke-linejoin:round;stroke-linecap:round;fill:var(--cream)"/><circle cx="20" cy="20" r="2" style="stroke:var(--forest);stroke-width:1.7;stroke-linejoin:round;stroke-linecap:round;fill:var(--cream)"/></svg>
+    <h1>This trail doesn’t go anywhere.</h1>
+    <a class="btn" href="https://nreaganaill.github.io/camp-counselor-reunion/"><span class="face">Back to the handbook</span></a>
+  </main>
+</body>
+</html>

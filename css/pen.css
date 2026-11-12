@@ -1,0 +1,306 @@
+/* Spirit Camp handbook · pen.css
+   The reader's pen marks (A2-2, B5-1) and the printed guidebook callouts (A2-4), plus the taped
+   photo plate (A2-3a, A6). Markup: tasks/2026-11-11_SITE_BUILD_CONTRACT.md. Colors only via tokens.
+   Hand strokes are data-URI SVG masks painted with a token background-color, so no color literal
+   ever sits in an SVG. Final state is the default: nothing is hidden without JS. The draw-on runs
+   only when .is-inview lands on the element or an ancestor, and never under reduced motion.
+
+   SKETCH LABEL RECIPE (A2-4e, leader and dot), for inline SVG drawings:
+     leader  <path d="M218 46 C238 30 262 22 300 22"
+               style="fill:none;stroke:var(--indigo);stroke-width:1.4;stroke-linecap:round"/>
+             one soft curve from the detail out to the label, no arrowhead
+     dot     <circle cx="218" cy="46" r="2.6" style="fill:var(--indigo)"/>   on the detail end
+     label   <text x="306" y="29" style="font-family:var(--f-hand);font-weight:500;font-size:22px;
+               fill:var(--indigo)">the land</text>   about 6 px past the leader end, baseline +7
+   (inline styles, not classes, so it also survives <use>). Classes .sk-leader .sk-dot .sk-label below
+   do the same for SVG written straight into the page. */
+
+:root{
+  --pen-ink: var(--indigo);                                          /* the owner's pen */
+  --pen-pencil: var(--rust);                                         /* the red pencil */
+  --pen-hl: #f2d787;  /* A2-2a highlighter, exact */
+  --pen-print: #585855;/* printed rules (A2-4) */
+  --pen-hair: rgba(59,61,60,0.14);
+
+  /* hand strokes (geometry copied from A2 / B5). Round caps, 2.2 px, non-scaling. */
+  --m-loop: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 50' preserveAspectRatio='none'><path d='M22 10 C44 2 98 3 112 18 C121 31 94 46 58 46 C24 46 4 37 7 24 C10 13 32 7 52 7' fill='none' stroke='currentColor' stroke-width='2.2' stroke-linecap='round' vector-effect='non-scaling-stroke'/></svg>");
+  --m-box: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 60' preserveAspectRatio='none'><path d='M8 8 C55 5 130 6 194 5 C196 22 195 40 194 55 C130 57 62 56 6 54 C4 38 5 22 4 5 C8 3 14 3 23 4' fill='none' stroke='currentColor' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round' vector-effect='non-scaling-stroke'/></svg>");
+  --m-squig: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 10' preserveAspectRatio='none'><path d='M2 6 Q7 1 12 6 T22 6 T32 6 T42 6 T52 6 T62 6 T72 6 T82 6 T92 6 T102 6 T112 6 T118 5' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' vector-effect='non-scaling-stroke'/></svg>");
+  --m-ul: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 12' preserveAspectRatio='none'><path d='M3 7 C50 4 110 8 160 6 C178 5 190 5 197 4' fill='none' stroke='currentColor' stroke-width='2.2' stroke-linecap='round' vector-effect='non-scaling-stroke'/></svg>");
+  --m-bracket: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 100' preserveAspectRatio='none'><path d='M18 3 C9 3 10 10 10 28 C10 42 10 46 3 50 C10 54 10 58 10 72 C10 90 9 97 18 97' fill='none' stroke='currentColor' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round' vector-effect='non-scaling-stroke'/></svg>");
+  --m-star: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='-2 -2 44 44'><path d='M20 4 L29.5 35 L4 15 L36.5 14 L10 35.5 L21 6' fill='none' stroke='currentColor' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+  --m-arrow: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 40'><g fill='none' stroke='currentColor' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'><path d='M3 8 C20 0 39 3 54 33'/><path d='M46.7 27.7 L54 33 L54.8 25.5'/></g></svg>");
+
+  /* printed callout emblems (A2-4): a flat fill layer and a forest line layer, 26 px boxes */
+  --m-ico-imp-fill: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 26'><circle cx='13' cy='13' r='11' fill='currentColor'/></svg>");
+  --m-ico-imp-line: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 26'><circle cx='13' cy='13' r='11' fill='none' stroke='currentColor' stroke-width='1.7'/><path d='M13 7.5 V14.5' stroke='currentColor' stroke-width='2.2' stroke-linecap='round'/><circle cx='13' cy='18.3' r='1.4' fill='currentColor'/></svg>");
+  --m-ico-tent-fill: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 52 38'><path d='M3 35 L26 4 L49 35 Z' fill='currentColor'/></svg>");
+  --m-ico-tent-line: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 52 38'><g fill='none' stroke='currentColor' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'><path d='M3 35 L26 4 L49 35 Z'/><path d='M26 4 L26 35 M20 35 L26 22 L32 35'/></g></svg>");
+  --m-ico-cosmic-fill: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 52 38'><path d='M7 34 A19 19 0 0 1 45 34 L33 34 A7 7 0 0 0 19 34 Z' fill='currentColor'/><path d='M44 3 C44.4 6.6 45.4 7.6 49 8 C45.4 8.4 44.4 9.4 44 13 C43.6 9.4 42.6 8.4 39 8 C42.6 7.6 43.6 6.6 44 3 Z M8 6 C8.3 8.7 9.3 9.7 12 10 C9.3 10.3 8.3 11.3 8 14 C7.7 11.3 6.7 10.3 4 10 C6.7 9.7 7.7 8.7 8 6 Z' fill='currentColor'/></svg>");
+  --m-ico-cosmic-line: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 52 38'><g fill='none' stroke='currentColor' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'><path d='M7 34 A19 19 0 0 1 45 34 L33 34 A7 7 0 0 0 19 34 Z'/><path d='M11 34 A15 15 0 0 1 41 34 M15 34 A11 11 0 0 1 37 34'/><path d='M44 3 C44.4 6.6 45.4 7.6 49 8 C45.4 8.4 44.4 9.4 44 13 C43.6 9.4 42.6 8.4 39 8 C42.6 7.6 43.6 6.6 44 3 Z M8 6 C8.3 8.7 9.3 9.7 12 10 C9.3 10.3 8.3 11.3 8 14 C7.7 11.3 6.7 10.3 4 10 C6.7 9.7 7.7 8.7 8 6 Z'/></g><circle cx='26' cy='6' r='1.6' fill='currentColor'/></svg>");
+  --m-ico-note-fill: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 26'><path d='M4 5 H22 V17 H12 L7 22 V17 H4 Z' fill='currentColor'/></svg>");
+  --m-ico-note-line: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 26'><path d='M4 5 H22 V17 H12 L7 22 V17 H4 Z' fill='none' stroke='currentColor' stroke-width='1.7' stroke-linejoin='round'/></svg>");
+  /* A2-4g wildlife sign: a marigold triangle, a forest paw print */
+  --m-ico-paw-fill: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 26'><path d='M13 2.5 L24.5 22.5 H1.5 Z' fill='currentColor'/></svg>");
+  --m-ico-paw-line: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 26'><path d='M13 2.5 L24.5 22.5 H1.5 Z' fill='none' stroke='currentColor' stroke-width='1.7' stroke-linejoin='round' stroke-linecap='round'/><g fill='currentColor'><ellipse cx='13' cy='17' rx='3.1' ry='2.6'/><circle cx='9.4' cy='13' r='1.25'/><circle cx='11.8' cy='11.3' r='1.25'/><circle cx='14.2' cy='11.3' r='1.25'/><circle cx='16.6' cy='13' r='1.25'/></g></svg>");
+  /* A2-4i bugle: brass mouthpiece, tube and bell, a rust pennant over the cord (34 x 26) */
+  --m-ico-bugle-fill: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 34 26'><g fill='currentColor'><path d='M2 10.5 L5 11.5 V14.5 L2 15.5 Z'/><rect x='5' y='11' width='15' height='4'/><path d='M20 8.5 L31 3 C32.6 8 32.6 18 31 23 L20 17.5 Z'/><path d='M10 15 V19 L13 21.5 L16 19 V15 Z'/></g></svg>");
+  --m-ico-bugle-line: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 34 26'><g fill='none' stroke='currentColor' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'><path d='M9 15 C9 16.8 9.4 17.9 10 18.6'/><path d='M16 19.4 C17.2 18.6 18 17.2 18 15'/><path d='M2 10.5 L5 11.5 V14.5 L2 15.5 Z'/><rect x='5' y='11' width='15' height='4'/><path d='M20 8.5 L31 3 C32.6 8 32.6 18 31 23 L20 17.5 Z'/><path d='M10 15 V19 L13 21.5 L16 19 V15'/></g></svg>");
+}
+
+/* the sweep angle for loops and boxes (a conic mask that turns with the pen) */
+@property --pen-sweep{syntax:"<angle>";inherits:false;initial-value:360deg}
+
+/* shared: a hand stroke painted through its mask */
+.pen-loop::after,.key-moment--box::after,.pen-squiggle::after,.pen-ul::after,
+.margin-bracket::after,.key-moment--star::before,.pencil-note--arrow-right::after{
+  content:"";pointer-events:none;
+  -webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;
+  -webkit-mask-size:100% 100%;mask-size:100% 100%;
+}
+
+/* ---------- A2-2a / B5-1a highlighter swipe ----------
+   Three butter bands with offset ends make the rough marker tip; they clone onto every line,
+   so a long phrase can wrap. Sits on the lower two thirds of the words, like A2. */
+.pen-hl{
+  color:inherit;background-color:transparent;
+  --hl-a:linear-gradient(to right,transparent .24em,var(--pen-hl) .28em calc(100% - .12em),transparent calc(100% - .09em));
+  --hl-b:linear-gradient(to right,transparent .1em,var(--pen-hl) .13em calc(100% - .2em),transparent calc(100% - .17em));
+  --hl-c:linear-gradient(to right,transparent .17em,var(--pen-hl) .2em calc(100% - .3em),transparent calc(100% - .26em));
+  background-image:var(--hl-a),var(--hl-b),var(--hl-c);
+  background-repeat:no-repeat;
+  background-position:left 0 top .3em,left 0 top .38em,left 0 bottom .13em;
+  background-size:100% .14em,100% calc(100% - .6em),100% .15em;
+  padding:0 .3em 0 .22em;margin:0 -.3em 0 -.22em;
+  -webkit-box-decoration-break:clone;box-decoration-break:clone;
+}
+
+/* ---------- A2-2c / B5-1b red-pencil loop ---------- */
+.pen-loop{position:relative;display:inline-block;white-space:nowrap;line-height:1.15;margin:0 .5em 0 .44em}
+.pen-loop::after{position:absolute;left:-.62em;top:-.46em;width:calc(100% + 1.4em);height:calc(100% + .86em);
+  background-color:var(--pen-pencil);-webkit-mask-image:var(--m-loop);mask-image:var(--m-loop)}
+
+/* ---------- A2-2d squiggle underline ---------- */
+.pen-squiggle{position:relative;display:inline-block;white-space:nowrap}
+.pen-squiggle::after{position:absolute;left:-2%;bottom:-.2em;width:104%;height:.3em;max-height:9px;min-height:6px;
+  background-color:var(--pen-pencil);-webkit-mask-image:var(--m-squig);mask-image:var(--m-squig)}
+
+/* ---------- B5-1 key moments: big Black Magic words marked by hand ---------- */
+.key-moment{margin:34px 0;font-family:var(--f-head);font-style:italic;font-weight:800;
+  font-variation-settings:"SOFT" 100,"WONK" 0;letter-spacing:-.01em;line-height:1.05;color:var(--forest);
+  font-size:clamp(27px,1.2vw + 22px,35px);text-wrap:balance}
+@media (max-width:759px){.key-moment{font-size:clamp(26px,7.2vw,30px)}}
+
+/* B5-1b red-pencil loop around big words. Two ways to mark it up:
+     <p class="key-moment key-moment--loop" data-inview><span class="pen-loop">No spectators.</span></p>  (loop the words)
+     <p class="key-moment key-moment--loop" data-inview>No spectators.</p>                               (loop the whole line)
+   Geometry from B5-1b (.circled): the loop hugs the words at any size and overshoots where it closes. */
+.key-moment--loop{line-height:1.24}
+.key-moment--loop .pen-loop{line-height:1.24;margin:0 .5em 0 .6em}
+.key-moment--loop .pen-loop::after{left:-.62em;top:-.34em;width:calc(100% + 1.2em);height:calc(100% + .56em)}
+.key-moment--loop:not(:has(.pen-loop)){position:relative;width:fit-content;max-width:100%;padding:0 .56em 0 .6em;margin-left:0}
+.key-moment--loop:not(:has(.pen-loop))::after{content:"";pointer-events:none;position:absolute;left:-.02em;top:-.34em;width:calc(100% + .04em);height:calc(100% + .56em);
+  background-color:var(--pen-pencil);-webkit-mask:var(--m-loop) center/100% 100% no-repeat;mask:var(--m-loop) center/100% 100% no-repeat}
+
+/* B5-1c / A2-2l pen box (kept for the record; out since round 1: "It looks childish."). Do not use. */
+.key-moment--box{position:relative;width:fit-content;max-width:100%;box-sizing:border-box;padding:.5em .62em .5em .72em}
+.key-moment--box::after{position:absolute;inset:0;background-color:var(--pen-ink);
+  -webkit-mask-image:var(--m-box);mask-image:var(--m-box)}
+
+/* B5-1d pen underline + margin star. The whole line is underlined in pen; to underline only the
+   words to remember, wrap each phrase in <span class="pen-ul"> (one stroke per phrase, as B5). */
+.key-moment--star{position:relative;padding-left:.82em;
+  text-decoration:underline;text-decoration-color:var(--pen-ink);text-decoration-thickness:2px;
+  text-underline-offset:.14em;text-decoration-skip-ink:none}
+.key-moment--star:has(.pen-ul){text-decoration:none}
+.key-moment--star::before{position:absolute;left:0;top:.16em;width:.62em;height:.62em;
+  background-color:var(--pen-ink);-webkit-mask-image:var(--m-star);mask-image:var(--m-star)}
+.pen-ul{position:relative;display:inline-block;white-space:nowrap}
+.pen-ul::after{position:absolute;left:-.06em;top:calc(50% + .33em);width:calc(100% + .1em);height:.22em;
+  background-color:var(--pen-ink);-webkit-mask-image:var(--m-ul);mask-image:var(--m-ul)}
+
+/* ---------- A2-2g margin bracket: red curly brace, the word in the margin to its LEFT ---------- */
+.margin-bracket{position:relative;padding-left:96px}
+.margin-bracket > :first-child{margin-top:0}
+.margin-bracket > :last-child{margin-bottom:0}
+.margin-bracket::before{content:attr(data-word);position:absolute;left:0;top:50%;width:62px;
+  transform:translateY(-50%) rotate(-6deg);text-align:right;
+  font-family:var(--f-hand);font-weight:500;font-size:24px;line-height:1;color:var(--pen-pencil);text-wrap:balance}
+.margin-bracket::after{position:absolute;left:68px;top:2px;bottom:2px;width:20px;
+  background-color:var(--pen-pencil);-webkit-mask-image:var(--m-bracket);mask-image:var(--m-bracket)}
+@media (max-width:759px){
+  /* phone: the word sits above, the brace stays on the left */
+  .margin-bracket{padding-left:30px;padding-top:30px}
+  .margin-bracket::before{top:0;left:2px;width:auto;transform:rotate(-3deg);transform-origin:left center;text-align:left}
+  .margin-bracket::after{left:0;top:32px;width:18px}
+}
+
+/* ---------- A2-4 printed guidebook callouts: flat on the page, no shadows ---------- */
+.callout{margin:34px 0;color:var(--charcoal)}
+.callout > *{margin:10px 0 0}
+.callout > p:not(.callout-label):not(.t-hand):not(.callout-call){font:300 18px/1.6 var(--f-body);color:var(--charcoal)}
+.callout h4,.callout h3{font:700 18.5px/1.4 var(--f-body);color:var(--charcoal);margin:10px 0 0}
+.callout h4 + p,.callout h3 + p{margin-top:2px}
+.callout-label{position:relative;margin:0;padding-left:36px;min-height:26px;
+  font:700 13.5px/26px var(--f-section);letter-spacing:.16em;text-transform:uppercase;color:var(--charcoal)}
+.callout-label::before,.callout-label::after{content:"";position:absolute;left:0;top:0;width:26px;height:26px;
+  -webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-size:100% 100%;mask-size:100% 100%}
+.callout-label::after{background-color:var(--forest)}
+
+/* A2-4a Important note: a ruled frame, the "!" emblem, a hairline under the label */
+.callout--important{border:1.5px solid var(--pen-print);padding:0 20px 18px}
+/* a peach label band across the top of the frame */
+.callout--important .callout-label{margin:0 -20px;padding:10px 20px 10px 56px;background:#f8dccf;border-bottom:1.5px solid var(--pen-print)}
+.callout--important .callout-label::before,.callout--important .callout-label::after{left:20px;top:10px}
+.callout--important .callout-label + *{margin-top:14px}
+.callout--important .callout-label::before{background-color:var(--peach);-webkit-mask-image:var(--m-ico-imp-fill);mask-image:var(--m-ico-imp-fill)}
+.callout--important .callout-label::after{-webkit-mask-image:var(--m-ico-imp-line);mask-image:var(--m-ico-imp-line)}
+
+/* A2-4b Field tip: one olive rule, a sage tint, the B3 tent */
+.callout--tip{border-left:4px solid var(--olive);background:#eaeadd;padding:14px 20px 16px}
+.callout--tip .callout-label{color:var(--olive);padding-left:40px}
+.callout--tip .callout-label::before,.callout--tip .callout-label::after{width:30px;height:22px;top:2px}
+.callout--tip .callout-label::before{background-color:var(--marigold);-webkit-mask-image:var(--m-ico-tent-fill);mask-image:var(--m-ico-tent-fill)}
+.callout--tip .callout-label::after{-webkit-mask-image:var(--m-ico-tent-line);mask-image:var(--m-ico-tent-line)}
+
+/* A2-4b Field tip, cosmic: the tent becomes a small rainbow arc with two stars (chapter 4).
+   Markup: <aside class="callout callout--tip callout--cosmic">. The fill layer is a radial gradient
+   of three brand bands (periwinkle, marigold, rust) clipped by the arc and star shapes; the stars
+   sit outside the bands so they print marigold. The forest line layer is drawn at B3 weight. */
+.callout--cosmic .callout-label::before{
+  background:radial-gradient(circle at 15px 19.7px,var(--periwinkle) 6.4px,var(--marigold) 6.4px 8.7px,var(--rust) 8.7px 11.2px,var(--marigold) 11.2px);
+  -webkit-mask-image:var(--m-ico-cosmic-fill);mask-image:var(--m-ico-cosmic-fill)}
+.callout--cosmic .callout-label::after{-webkit-mask-image:var(--m-ico-cosmic-line);mask-image:var(--m-ico-cosmic-line)}
+
+/* A2-4c Counselor's note: the counselors' hand between two dotted rules */
+.callout--counselor{border-top:1.5px dotted var(--pen-print);border-bottom:1.5px dotted var(--pen-print);padding:16px 14px 18px;
+  background:#f9f2d8}   /* a butter page tint behind the counselors' hand */
+.callout--counselor .callout-label::before{background-color:var(--butter);-webkit-mask-image:var(--m-ico-note-fill);mask-image:var(--m-ico-note-fill)}
+.callout--counselor .callout-label::after{-webkit-mask-image:var(--m-ico-note-line);mask-image:var(--m-ico-note-line)}
+.callout--counselor .t-hand{margin-top:8px;font-family:var(--f-hand);font-weight:500;font-size:30px;line-height:1.04;color:var(--pen-ink);text-wrap:balance}
+@media (max-width:759px){.callout--counselor .t-hand{font-size:28px}}
+
+/* A2-4g Wildlife warning: a printed frame, a marigold header band, the paw-print sign.
+   <aside class="callout callout--wildlife"><p class="callout-label">Wildlife warning</p><p>...</p></aside> */
+.callout--wildlife{border:1.5px solid var(--pen-print);padding:0}
+.callout--wildlife > *{margin:0}
+.callout--wildlife .callout-label{padding:10px 16px 10px 52px;background:#fae4b9;border-bottom:1.5px solid var(--pen-print)}
+.callout--wildlife .callout-label::before,.callout--wildlife .callout-label::after{left:16px;top:10px}
+.callout--wildlife .callout-label::before{background-color:var(--marigold);-webkit-mask-image:var(--m-ico-paw-fill);mask-image:var(--m-ico-paw-fill)}
+.callout--wildlife .callout-label::after{-webkit-mask-image:var(--m-ico-paw-line);mask-image:var(--m-ico-paw-line)}
+.callout--wildlife > p:not(.callout-label){padding:12px 16px 16px}
+
+/* A2-4i Bugle call: a centered notice between double rules, the brass bugle, the call in the heading face.
+   <aside class="callout callout--bugle"><p class="callout-label">Bugle call</p><p class="callout-call">...</p><p>...</p></aside> */
+.callout--bugle{text-align:center;border-top:3px double var(--pen-print);border-bottom:3px double var(--pen-print);padding:14px 10px 16px}
+.callout--bugle .callout-label{width:fit-content;margin:0 auto;padding-left:44px}
+.callout--bugle .callout-label::before,.callout--bugle .callout-label::after{width:34px;height:26px}
+.callout--bugle .callout-label::before{background:linear-gradient(var(--rust),var(--rust)) 10px 15px/6px 7px no-repeat,var(--marigold);
+  -webkit-mask-image:var(--m-ico-bugle-fill);mask-image:var(--m-ico-bugle-fill)}
+.callout--bugle .callout-label::after{-webkit-mask-image:var(--m-ico-bugle-line);mask-image:var(--m-ico-bugle-line)}
+.callout--bugle .callout-call{margin:10px 0 2px;font-family:var(--f-head);font-style:italic;font-weight:800;
+  font-variation-settings:"SOFT" 100,"WONK" 0;font-size:28px;line-height:1.1;color:var(--forest)}
+.callout--bugle .callout-call + p{margin-top:4px}
+
+/* ---------- A2-2b peach highlight: the A2-2a swipe in peach, for must-knows in body text ---------- */
+.pen-hl--peach{--pen-hl:#f2bfac}
+
+/* ---------- A2-2d squiggle that wraps: for a whole sentence. The A2-2d wave (humps 10 px wide,
+   5 px peak to peak, a 2.2 px red pencil) drawn as two rows of ring arcs, so it is pure CSS in a token
+   color and clones onto every line the sentence wraps to. Up humps sit above the centre line,
+   down humps below it; each arc is a slice of a 6.25 px ring, so they meet tangent, like A2's T curve. */
+@property --pen-sq{syntax:"<color>";inherits:true;initial-value:transparent}
+.pen-squiggle--wrap{display:inline;position:static;white-space:normal;--pen-sq:var(--pen-pencil);
+  padding-bottom:9px;
+  background-image:
+    radial-gradient(circle at 10px 8.75px,transparent 4.75px,var(--pen-sq) 5.15px 7.35px,transparent 7.75px),
+    radial-gradient(circle at 10px -3.75px,transparent 4.75px,var(--pen-sq) 5.15px 7.35px,transparent 7.75px);
+  background-repeat:repeat-x;
+  background-size:20px 5px,20px 5px;
+  background-position:-5px calc(100% - 5px),5px 100%;
+  -webkit-box-decoration-break:clone;box-decoration-break:clone}
+.pen-squiggle--wrap::after{content:none}
+
+/* ---------- A2-2i "!" note: a red-pencil circled "!" and one line in the owner's pen ----------
+   <p class="pen-bang" data-inview><svg class="pen-bang-mk" viewBox="0 0 46 46" aria-hidden="true">
+     <path class="o" pathLength="1" d="M25 4 C36 5 43 13 42 24 C41 35 32 42 22 42 C11 41 4 33 5 22 C6 12 13 6 21 5"/>
+     <path class="i" pathLength="1" d="M23 12 C23 18 23 23 22.5 28"/><circle class="d" cx="22.5" cy="34.5" r="1.9"/></svg>
+     <span class="t-hand">...</span></p>   Counts as the page's one handwritten note. */
+.pen-bang{display:flex;align-items:center;gap:12px;margin:0;text-align:left}
+.pen-bang-mk{width:52px;height:52px;flex:none;overflow:visible;fill:none;stroke:var(--pen-pencil);
+  stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.pen-bang-mk .i{stroke-width:3}
+.pen-bang-mk .d{fill:var(--pen-pencil);stroke:none}
+.pen-bang .t-hand{display:block;max-width:15ch;font-family:var(--f-hand);font-weight:500;font-size:27px;line-height:1.04;
+  color:var(--pen-ink);transform:rotate(-2deg);transform-origin:left center;text-wrap:balance}
+@media (max-width:759px){.pen-bang-mk{width:46px;height:46px}.pen-bang .t-hand{font-size:25px}}
+
+/* ---------- loose pencil note (Caveat, the owner's pen) ---------- */
+.pencil-note{margin:20px 0;max-width:18ch;font-family:var(--f-hand);font-weight:500;font-size:29px;line-height:1.04;
+  color:var(--pen-ink);transform:rotate(-2deg);transform-origin:left top;text-wrap:balance}
+@media (max-width:759px){.pencil-note{font-size:27px}}
+/* the arrow leaves from the end of the last word, in one stroke, and lands down-right.
+   It takes no room in the line, so it never wraps away from the words it belongs to. */
+.pencil-note--arrow-right::after{display:inline-block;width:2em;height:1.33em;vertical-align:baseline;
+  margin:-.49em -2.12em -.84em .12em;background-color:var(--pen-ink);
+  -webkit-mask-image:var(--m-arrow);mask-image:var(--m-arrow)}
+
+/* ---------- A2-3a / A6 photo plate: one clear tape strip, top center, on top ---------- */
+.plate{position:relative;margin:30px 0;background:var(--warm-white);padding:12px 12px 10px;
+  border:1px solid var(--pen-hair);box-shadow:var(--shadow-paper);transform:rotate(var(--rot,-.6deg))}
+.plate-img img{display:block;width:100%;height:auto}
+.plate figcaption{margin:10px 2px 0;font-size:13px;line-height:1.4;letter-spacing:.14em;color:var(--ink-soft)}
+.plate::after{content:"";position:absolute;z-index:3;left:50%;top:-12px;width:104px;height:26px;margin-left:-52px;
+  transform:rotate(-1.5deg);pointer-events:none;mix-blend-mode:multiply;
+  background:linear-gradient(to bottom,transparent 28%,rgba(255,250,244,0.3) 42%,transparent 58%),var(--tape-clear);
+  box-shadow:inset 0 1px 0 var(--tape-clear-edge),inset 0 -1px 0 var(--tape-clear-edge);
+  clip-path:polygon(2px 0,calc(100% - 3px) 0,100% 22%,calc(100% - 3px) 46%,100% 70%,calc(100% - 2px) 100%,3px 100%,0 76%,3px 52%,0 28%)}
+/* placeholder: a flat oat tile that types which photo goes here */
+.plate--placeholder{display:grid}
+.plate--placeholder .plate-img{grid-area:1/1;aspect-ratio:4/3;background:var(--oat);
+  border:1px dashed rgba(55,82,79,0.55)}
+.plate--placeholder::before{content:attr(data-shot);grid-area:1/1;align-self:center;justify-self:center;
+  position:relative;z-index:1;max-width:30ch;padding:16px 20px;text-align:center;font:400 13px/1.5 var(--f-section);letter-spacing:.04em;color:var(--ink-soft)}
+.plate--placeholder figcaption{grid-row:2}
+
+/* ---------- SVG helpers for sketch labels (see the recipe at the top) ---------- */
+.sk-leader{fill:none;stroke:var(--indigo);stroke-width:1.4;stroke-linecap:round}
+.sk-dot{fill:var(--indigo)}
+.sk-label{font-family:var(--f-hand);font-weight:500;font-size:22px;fill:var(--indigo)}
+
+/* ---------- draw-on, once, when .is-inview arrives (handbook.js) ---------- */
+@keyframes pen-swipe{from{background-size:0 .14em,0 calc(100% - .6em),0 .15em}}
+/* the conic layer exists only while drawing (fill backwards), so no mask edge remains at rest */
+@keyframes pen-draw-loop{
+  from{--pen-sweep:0deg;-webkit-mask-image:var(--m-loop),conic-gradient(from 292deg,var(--ink) var(--pen-sweep),transparent 0);mask-image:var(--m-loop),conic-gradient(from 292deg,var(--ink) var(--pen-sweep),transparent 0);-webkit-mask-composite:source-in;mask-composite:intersect}
+  to{--pen-sweep:360deg;-webkit-mask-image:var(--m-loop),conic-gradient(from 292deg,var(--ink) var(--pen-sweep),transparent 0);mask-image:var(--m-loop),conic-gradient(from 292deg,var(--ink) var(--pen-sweep),transparent 0);-webkit-mask-composite:source-in;mask-composite:intersect}}
+@keyframes pen-draw-box{
+  from{--pen-sweep:0deg;-webkit-mask-image:var(--m-box),conic-gradient(from 296deg,var(--ink) var(--pen-sweep),transparent 0);mask-image:var(--m-box),conic-gradient(from 296deg,var(--ink) var(--pen-sweep),transparent 0);-webkit-mask-composite:source-in;mask-composite:intersect}
+  to{--pen-sweep:360deg;-webkit-mask-image:var(--m-box),conic-gradient(from 296deg,var(--ink) var(--pen-sweep),transparent 0);mask-image:var(--m-box),conic-gradient(from 296deg,var(--ink) var(--pen-sweep),transparent 0);-webkit-mask-composite:source-in;mask-composite:intersect}}
+@keyframes pen-wipe{from{clip-path:inset(-20% 100% -20% -2px)}to{clip-path:inset(-20% -2px -20% -2px)}}
+@keyframes pen-fade{from{opacity:0}}
+@keyframes pen-pop{from{opacity:0;transform:scale(.6) rotate(-20deg)}}
+@keyframes pen-ink{from{text-decoration-color:transparent}}
+@keyframes pen-sq-ink{from{--pen-sq:transparent}}
+@keyframes pen-stroke{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
+
+@media (prefers-reduced-motion:no-preference){
+  :is(.is-inview) .pen-hl,.pen-hl.is-inview{animation:pen-swipe .6s cubic-bezier(.3,.7,.2,1) .25s both}
+  :is(.is-inview) .pen-loop::after,.pen-loop.is-inview::after,
+  .key-moment--loop.is-inview:not(:has(.pen-loop))::after{animation:pen-draw-loop .7s cubic-bezier(.45,.1,.3,1) .25s backwards}
+  .key-moment--box.is-inview::after,:is(.is-inview) .key-moment--box::after{animation:pen-draw-box .8s cubic-bezier(.45,.1,.3,1) .25s backwards}
+  :is(.is-inview) .pen-squiggle::after,.pen-squiggle.is-inview::after,
+  :is(.is-inview) .pen-ul::after,.pen-ul.is-inview::after{animation:pen-wipe .5s ease-out .3s both}
+  .key-moment--star.is-inview,:is(.is-inview) .key-moment--star{animation:pen-ink .6s ease .55s both}
+  .key-moment--star.is-inview::before,:is(.is-inview) .key-moment--star::before{animation:pen-pop .35s ease-out .25s both}
+  .margin-bracket.is-inview::before,.margin-bracket.is-inview::after,
+  :is(.is-inview) .margin-bracket::before,:is(.is-inview) .margin-bracket::after{animation:pen-fade .5s ease .2s both}
+  .margin-bracket.is-inview::before,:is(.is-inview) .margin-bracket::before{animation-delay:.5s}
+  .pencil-note--arrow-right.is-inview::after,:is(.is-inview) .pencil-note--arrow-right::after{animation:pen-wipe .45s ease-in-out .35s both}
+  :is(.is-inview) .pen-squiggle--wrap,.pen-squiggle--wrap.is-inview{animation:pen-sq-ink .6s ease .3s both}
+  .pen-bang-mk .o,.pen-bang-mk .i{stroke-dasharray:1}
+  :is(.is-inview) .pen-bang-mk .o,.pen-bang.is-inview .pen-bang-mk .o{animation:pen-stroke .6s cubic-bezier(.45,.1,.3,1) .2s both}
+  :is(.is-inview) .pen-bang-mk .i,.pen-bang.is-inview .pen-bang-mk .i{animation:pen-stroke .22s ease-out .8s both}
+  :is(.is-inview) .pen-bang-mk .d,.pen-bang.is-inview .pen-bang-mk .d{animation:pen-fade .12s ease 1.04s both}
+  :is(.is-inview) .pen-bang .t-hand,.pen-bang.is-inview .t-hand{animation:pen-fade .5s ease 1.1s both}
+}
