@@ -13,7 +13,7 @@
   var KINDS = [
     ['instagram', 'Instagram', 'IG', 'linear-gradient(135deg,#F58529,#DD2A7B,#515BD4)'], ['linkedin', 'LinkedIn', 'IN', '#494E74'],
     ['facebook', 'Facebook', 'FB', '#5764A6'], ['website', 'Website', 'WEB', '#37524F'], ['project', 'Project', 'PRJ', '#BC6A37'],
-    ['other', 'Other link', 'LINK', '#7C522E'], ['ask', 'Ask me (no link)', 'ASK', '#A8286B']
+    ['other', 'Other link', 'LINK', '#7C522E'], ['ask', 'Ask me in person (no link)', 'ASK', '#A8286B']
   ];
   var DEFAULTS = { front_line: 50, ask_me_about: 32, bio: 900, cta: 28, links: 6, labels_max: 3 };
 
@@ -50,7 +50,7 @@
     server: 'Something went wrong. Try again in a minute.',
     closed: 'The scrapbook is closed for now.',
     busy: 'Too many tries. Please wait a few minutes.',
-    bad_key: 'Something went wrong. Start again with your email.',
+    bad_key: 'We lost your place. Enter your email again to open your page.',
     too_long: "That's too long. Please shorten it.",
     bad_input: "That doesn't look right. Please check it and try again."
   };
@@ -67,19 +67,20 @@
   }
 
   /* ── open ── */
+  function setNf(on) { $('nf').hidden = !on; $('fine-intake').hidden = !!on; }
   function openByEmail(ev) {
     ev.preventDefault();
     var email = $('em').value.trim();
-    $('nf').hidden = true;
+    setNf(false);
     setErr('e-email', '');
     if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { setErr('e-email', "That doesn't look like an email."); return; }
     var b = $('b-open'); b.disabled = true;
     post({ action: 'scrapbook_open', email: email }).then(function (r) {
       b.disabled = false;
       if (r.ok && r.found) { KEY = r.key; fill(r); show('s-edit'); }
-      else if (r.ok) $('nf').hidden = false;
+      else if (r.ok) setNf(true);
       else if (r.error === 'bad_input') setErr('e-email', "That doesn't look like an email.");
-      else if (r.error === 'busy') setErr('e-email', 'Too many tries. Please wait a few minutes.');
+      else if (r.error === 'busy') setErr('e-email', 'Lots of people are here right now. Try again in a few minutes.');
       else setErr('e-email', GENERIC[r.error] || GENERIC.server);
     });
   }
@@ -88,7 +89,7 @@
     post({ action: 'scrapbook_load', key: k }).then(function (r) {
       $('b-open').disabled = false;
       if (r.ok && r.page) { KEY = k; fill(r); show('s-edit'); }
-      else setErr('e-email', r.error === 'bad_key' ? 'That saved link no longer works. Open your page with your email instead.' : (GENERIC[r.error] || GENERIC.server));
+      else setErr('e-email', GENERIC[r.error] || GENERIC.server);
     });
   }
 
@@ -161,7 +162,7 @@
       sel.addEventListener('change', function () { links[i].kind = sel.value; if (sel.value === 'ask') links[i].url = ''; renderLinks(); });
       var ic = h('div', { class: 'ic' }, [h('span', { text: info[2] }), sel]); ic.style.background = info[3];
       var row = h('div', { class: 'row' }, [ic]);
-      if (l.kind === 'ask') row.appendChild(h('div', { class: 'noset', text: 'No link: ask me in person' }));
+      if (l.kind === 'ask') row.appendChild(h('div', { class: 'noset', text: 'Ask me in person (no link)' }));
       else {
         var u = h('input', { class: 'inp', type: 'url', inputmode: 'url', autocapitalize: 'off', spellcheck: 'false', placeholder: 'https://', 'aria-label': 'Link address' });
         u.value = l.url; u.addEventListener('input', function () { links[i].url = u.value; });
@@ -179,7 +180,7 @@
     });
     var add = $('b-addlink'), max = lim('links');
     add.disabled = links.length >= max;
-    add.textContent = links.length >= max ? 'That’s all ' + max + ' links' : '+ Add a link or an “ask me” (' + links.length + ' of ' + max + ' used)';
+    add.textContent = links.length >= max ? 'That’s all ' + max + ' links' : '+ Add a link or “Ask me in person (no link)” (' + links.length + ' of ' + max + ' used)';
   }
 
   /* ── contact ── */
@@ -258,17 +259,17 @@
   }
   function sayStale() {
     var s = slot(); s.textContent = '';
-    var m = h('div', { class: 'msg bad', role: 'alert', text: 'Your page changed somewhere else. Reload and lose these edits, or keep editing?' });
+    var m = h('div', { class: 'msg note', role: 'alert', text: 'Your page was updated somewhere else. Tap Copy my words to keep what you typed, then Reload to see the newest.' });
     var row = h('div', { class: 'row2' });
-    var b1 = h('button', { type: 'button', class: 'btn', text: 'Reload' });
+    var b1 = h('button', { type: 'button', class: 'btn ghost', text: 'Reload' });
     b1.addEventListener('click', function () { reload(); });
     var b2 = h('button', { type: 'button', class: 'btn ghost', text: 'Keep editing' });
     b2.addEventListener('click', function () { s.textContent = ''; show('s-edit'); });
-    var b3 = h('button', { type: 'button', class: 'btn ghost', text: 'Copy my words' });
+    var b3 = h('button', { type: 'button', class: 'btn', text: 'Copy my words' });
     b3.addEventListener('click', function () {
       copyText(plainWords()).then(function (ok) { b3.textContent = ok ? 'Copied' : "Couldn't copy"; });
     });
-    row.appendChild(b1); row.appendChild(b2); row.appendChild(b3);
+    row.appendChild(b3); row.appendChild(b1); row.appendChild(b2);
     m.appendChild(row); s.appendChild(m);
     m.scrollIntoView({ block: 'nearest' });
   }
@@ -296,10 +297,11 @@
           if (body.contact.email && !body.contact.use_for_registration) { /* page-only email: keep showing the main one */ $('c-email').value = contact.email || ''; }
           useForReg = null; syncConfirm();
         }
-        say('ok', "Thank you! We've got your changes. Your page updates within a few minutes online, and on the camp TV at its next refresh.");
+        say('ok', 'Saved! Your page will show your changes online in a few minutes.');
         return;
       }
       if (r.error === 'stale') { sayStale(); return; }
+      if (r.error === 'bad_key') { KEY = null; show('s-email'); setErr('e-email', GENERIC.bad_key); return; }
       if (r.error === 'busy') { say('bad', 'Lots of people are saving right now. Tap Save again in a few seconds.'); return; }
       if (r.error === 'bad_input' || r.error === 'too_long') {
         var f = r.field, id = { front_line: 'e-front_line', ask_me_about: 'e-ask_me_about', bio: 'e-bio', labels: 'e-labels', links: 'e-links', 'contact.email': 'e-contact-email', 'contact.phone': 'e-contact-phone' }[f];
@@ -307,16 +309,17 @@
         if (id) { show('s-edit'); setErr(id, msg); $(id).scrollIntoView({ block: 'center' }); return; }
         say('bad', msg); return;
       }
-      say('bad', GENERIC[r.error] || GENERIC.server);
+      say('bad', GENERIC[r.error] || "That didn't save. Check the highlighted box and try again.");
     });
   }
   function fieldMessage(f, err) {
     if (err === 'too_long') return "That's too long. Please shorten it.";
     if (f === 'labels') return 'Pick 1 to 3 labels.';
-    if (f === 'links') return 'Each link needs a full address starting with https://. An "ask me" needs no address, just the words.';
-    if (f === 'contact.email') return "That email doesn't work. Check it, or it may already be in use.";
+    if (f === 'links') return 'Each link needs a full address starting with https://. An "Ask me in person" needs no address, just the words.';
+    if (f === 'contact.email') return "That email doesn't look right. Check it, or try a different one.";
     if (f === 'contact.phone') return "That phone number doesn't look right. Include the country code if it's outside the US.";
-    return 'Keep contact details off your page. Put them in Your contact details instead.';
+    if (f === 'front_line' || f === 'ask_me_about' || f === 'bio') return 'Keep phone and email off your page. Add them under Your contact details.';
+    return "That didn't save. Check the highlighted box and try again.";
   }
 
   /* ── preview ── */
@@ -395,6 +398,7 @@
     for (var i = 0; i < 20; i++) out += c[(b ? b[i] : Math.floor(Math.random() * 256)) % 62];
     return out;
   }
+  var PHOTO_BAD = "That photo didn't work. Try a different one, or open this page in Safari.";
   function photoMsg(text, bad) { var m = $('photo-msg'); m.textContent = text || ''; m.className = 'photo-msg' + (bad ? ' bad' : ''); }
   function pickPhoto(file) {
     if (!file) return;
@@ -406,17 +410,17 @@
       function attempt() {
         n++;
         return post({ action: 'save_photo', key: KEY, photo: photo }, 90000).then(function (r) {
-          if (r.ok) { photoThumb = photo.thumb; drawPhoto(); photoMsg('Photo saved. It is live now.'); return; }
+          if (r.ok) { photoThumb = photo.thumb; drawPhoto(); photoMsg('Photo saved!'); return; }
           if (['network', 'timeout', 'busy', 'server'].indexOf(r.error) >= 0 && n < 3) {
             photoMsg('Trying again…');
             return new Promise(function (ok) { setTimeout(ok, waits[n - 1]); }).then(attempt);
           }
-          photoMsg(r.error === 'too_big' ? 'That photo is too big. Try another.' : r.error === 'bad_photo' ? "That photo didn't work. Try another." : (GENERIC[r.error] || GENERIC.server), true);
+          photoMsg(r.error === 'too_big' ? 'That photo is too big. Try another.' : r.error === 'bad_photo' ? PHOTO_BAD : (GENERIC[r.error] || GENERIC.server), true);
         });
       }
       return attempt();
     }).catch(function (e) {
-      photoMsg(e && e.message === 'too_big' ? 'That photo is too big. Try another.' : "That photo didn't work. Try another.", true);
+      photoMsg(e && e.message === 'too_big' ? 'That photo is too big. Try another.' : PHOTO_BAD, true);
     });
   }
 
@@ -444,7 +448,7 @@
   $('b-save').addEventListener('click', save);
   $('b-save2').addEventListener('click', save);
 
-  if (/\bFBA[NV]\/|FBIOS|Instagram|WhatsApp/i.test(navigator.userAgent || '')) { $('inapp').hidden = false; }
+  if (/\bFBA[NV]\/|FBIOS|Instagram|WhatsApp/i.test(navigator.userAgent || '')) { $('inapp').hidden = false; $('inapp-email').hidden = false; }
   window.addEventListener('pageshow', function (e) { if (e.persisted) location.reload(); });
 
   /* a saved form link (?k=): read once, strip it from the address bar, then load */

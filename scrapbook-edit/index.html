@@ -20,7 +20,7 @@
 <link rel="icon" href="../assets/icons/favicon.ico" sizes="48x48">
 <link rel="icon" type="image/png" href="../assets/icons/favicon-32.png">
 <link rel="apple-touch-icon" href="../assets/icons/apple-touch-icon.png">
-<link rel="stylesheet" href="styles.css?v=20261128">
+<link rel="stylesheet" href="styles.css?v=20261128c">
 </head>
 <body>
 <main class="wrap">
@@ -28,7 +28,7 @@
 <!-- 1 · email -->
 <section id="s-email" class="screen" aria-labelledby="h-email">
   <div class="in">
-    <p class="kick">Camp Counselor Scrapbook</p>
+    <p class="kick">Step 2 of 2</p>
     <h1 class="h" id="h-email">Edit your scrapbook page</h1>
     <p class="lead">Change your photo, words or links.</p>
     <form id="f-email" novalidate>
@@ -37,11 +37,13 @@
       <p class="err" id="e-email" role="alert" hidden></p>
       <button class="btn" id="b-open" type="submit">Open my page →</button>
     </form>
-    <p class="fine">Haven't done your intake form yet? <a href="../intake/">Do it first →</a></p>
+    <p class="fine inapp-email" id="inapp-email" hidden>Opened from Instagram or Facebook? For photos, open this page in Safari or Chrome.</p>
+    <p class="fine" id="fine-intake">Haven't done your intake form yet? <a href="../intake/">Do it first →</a></p>
     <div class="nf" id="nf" hidden>
-      <p><b>We couldn't find that email.</b> Your scrapbook page starts with your intake form.</p>
+      <p><b>Hmm, we can't find that email.</b></p>
+      <p>Try the email you used on your intake form. New here? Do your intake form first.</p>
       <a class="btn" href="../intake/">Do your intake form first →</a>
-      <p class="fine">Already did it? Try the email you used there, or write to spiritcampevents@gmail.com.</p>
+      <p class="fine">Questions? Write to spiritcampevents@gmail.com.</p>
     </div>
   </div>
 </section>
@@ -127,6 +129,6 @@
 </section>
 
 </main>
-<script src="app.js?v=20261128"></script>
+<script src="app.js?v=20261128c"></script>
 </body>
 </html>

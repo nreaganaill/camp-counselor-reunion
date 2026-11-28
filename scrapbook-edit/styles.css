@@ -88,7 +88,7 @@ label.f{display:block;font:700 12px/1 var(--f-type);letter-spacing:.12em;text-tr
 /* not-found: send them to the intake form first (2026-11-28) */
 .nf{margin-top:20px;background:#FFF3A8;border-radius:12px;padding:16px;box-shadow:2px 5px 10px rgba(59,61,60,.15)}
 .nf p{margin:0 0 4px}
-.nf .btn{text-decoration:none;margin-top:12px}
+.nf .btn{text-decoration:none;margin-top:12px;margin-bottom:10px}
 .fine a{color:var(--rust);font-weight:700}
 .fine a{display:inline-block;min-height:44px;line-height:44px;padding:0 6px;margin:-14px -6px}
 
@@ -97,3 +97,8 @@ label.f{display:block;font:700 12px/1 var(--f-type);letter-spacing:.12em;text-tr
 .msg .row2{display:flex;flex-wrap:wrap;gap:8px}
 .msg .row2 .btn{flex:1 1 130px;width:auto;margin-top:10px}
 .msg .btn.ghost{background:var(--warm-white);color:var(--forest)}
+
+/* calm note for stale (2026-11-28) */
+.msg.note{background:#FFF3A8;color:var(--ink)}
+
+.inapp-email{color:var(--rust);font-weight:600;margin-top:10px}

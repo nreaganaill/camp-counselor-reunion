@@ -1391,7 +1391,7 @@ ${tray}</div>`;
 /* ---------- grid ---------- */
 function paintGrid(){
   const list=C.filter(match);
-  $g.innerHTML=list.length?list.map(c=>{const t=aTile(c,W.open===c.i,false);return c.has||!window.SCRAPBOOK_EDIT?t:t.replace('<span class="a-line">page on its way</span>','<span class="a-line">page on its way</span><a class="w-tjoin" href="../intake/">Do your intake form first.</a>')}).join(''):'<p class="w-none">Nobody here yet. Pick another one.</p>';
+  $g.innerHTML=list.length?list.map(c=>{const t=aTile(c,W.open===c.i,false);return c.has||!window.SCRAPBOOK_EDIT?t:t.replace('<span class="a-line">page on its way</span>','<span class="a-line">Their page is on its way.</span><a class="w-tjoin" href="../intake/">Is this you? Do your intake&nbsp;form&nbsp;→</a>')}).join(''):'<p class="w-none">Nobody here yet. Pick another one.</p>';
   const el=document.getElementById('wsr');if(el)el.textContent=W.sel?list.length+(list.length===1?' camper':' campers')+' shown':'';
 }
 
@@ -1402,10 +1402,10 @@ function panelHTML(c){
     .concat(c.own.map(x=>`<figure class="own"><span>✦</span><figcaption>${esc(x.name)}</figcaption></figure>`));
   const links=c.links.filter(l=>okUrl(linkUrl(l)));
   const proj=projBlock(c);const asks=c.links.filter(l=>l.kind==='ask'&&l.cta);
-  let h=`<div class="w-id"><span class="c-ph">${photo(c)}</span><div><h2>${esc(c.first)} ${esc(c.last)}</h2><div class="stamps">${stamps(c)}</div>${askme(c)}${window.SCRAPBOOK_EDIT?`<a class="w-edtop" href="${esc(window.SCRAPBOOK_EDIT.url)}" target="_blank" rel="noopener noreferrer">Is this you? Edit your page</a>`:''}</div></div>
+  let h=`<div class="w-id"><span class="c-ph">${photo(c)}</span><div><h2>${esc(c.first)} ${esc(c.last)}</h2><div class="stamps">${stamps(c)}</div>${askme(c)}${window.SCRAPBOOK_EDIT?`<a class="w-edtop" href="${esc(window.SCRAPBOOK_EDIT.url)}" target="_blank" rel="noopener noreferrer">Is this you? Edit your scrapbook page</a>`:''}</div></div>
 ${proj}${c.bio?'':talkHTML(c)}${thinHTML(c)}
 ${links.length||asks.length?`<div class="w-links"><p class="sec-k">Join · follow · find me</p><div class="w-lts">${links.map(l=>`<a class="w-lt${l.cta?' cta':''}" href="${esc(linkUrl(l))}" target="_blank" rel="noopener noreferrer" style="--k:${kcol(l)}"><i></i><span><b>${esc(l.cta||kname(l))}</b><small>${esc(l.cta?kname(l)+(l.label?' · '+l.label:''):tileLabel(l))}</small></span></a>`).join('')}${asks.map(l=>`<div class="w-lt cta ask" style="--k:var(--plum)"><i></i><span><b>${esc(l.cta)}</b><small>Ask ${esc(c.first)} in person</small></span></div>`).join('')}</div></div>`:''}
-${window.SCRAPBOOK_EDIT?`<a class="w-edit" href="${esc(window.SCRAPBOOK_EDIT.url)}" target="_blank" rel="noopener noreferrer">Is this you? Change or add to your scrapbook page</a>`:''}
+${window.SCRAPBOOK_EDIT?`<a class="w-edit" href="${esc(window.SCRAPBOOK_EDIT.url)}" target="_blank" rel="noopener noreferrer">Is this you? Edit your scrapbook page</a>`:''}
 <div class="w-contact"><button class="w-save" type="button" data-w="vcard">Add ${esc(c.first)} to contacts</button>${IN_APP?'<p class="w-hint">Open in Safari or Chrome to save contacts</p>':''}</div>
 ${items.length?`<div class="w-gifts"><p class="sec-k">Gift badges</p><div class="c-sash">${items.join('')}</div></div>`:''}`;
   h=h.split('✦ Passion').join('✦ Passion').split('Passion &amp; expertise').join('Passion &amp; expertise');
