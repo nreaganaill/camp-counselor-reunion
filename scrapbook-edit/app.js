@@ -240,6 +240,38 @@
     s.appendChild(m);
     if (!$('s-preview').hidden || kind !== 'ok') m.scrollIntoView({ block: 'nearest' });
   }
+  function plainWords() {
+    return [($('front_line').value || ''), ($('ask_me_about').value || ''), ($('bio').value || '')].join('\n');
+  }
+  function copyText(text) {
+    function fallback() {
+      var ta = h('textarea', { 'aria-hidden': 'true', tabindex: '-1' });
+      ta.style.cssText = 'position:fixed;left:-9999px;top:0;opacity:0';
+      ta.value = text; document.body.appendChild(ta); ta.select();
+      var ok = false; try { ok = document.execCommand('copy'); } catch (e) {}
+      document.body.removeChild(ta); return ok;
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      return navigator.clipboard.writeText(text).then(function () { return true; }, function () { return fallback(); });
+    }
+    return Promise.resolve(fallback());
+  }
+  function sayStale() {
+    var s = slot(); s.textContent = '';
+    var m = h('div', { class: 'msg bad', role: 'alert', text: 'Your page changed somewhere else. Reload and lose these edits, or keep editing?' });
+    var row = h('div', { class: 'row2' });
+    var b1 = h('button', { type: 'button', class: 'btn', text: 'Reload' });
+    b1.addEventListener('click', function () { reload(); });
+    var b2 = h('button', { type: 'button', class: 'btn ghost', text: 'Keep editing' });
+    b2.addEventListener('click', function () { s.textContent = ''; show('s-edit'); });
+    var b3 = h('button', { type: 'button', class: 'btn ghost', text: 'Copy my words' });
+    b3.addEventListener('click', function () {
+      copyText(plainWords()).then(function (ok) { b3.textContent = ok ? 'Copied' : "Couldn't copy"; });
+    });
+    row.appendChild(b1); row.appendChild(b2); row.appendChild(b3);
+    m.appendChild(row); s.appendChild(m);
+    m.scrollIntoView({ block: 'nearest' });
+  }
   function reload() {
     if (!KEY) { location.reload(); return; }
     post({ action: 'scrapbook_load', key: KEY }).then(function (r) {
@@ -267,7 +299,8 @@
         say('ok', "Thank you! We've got your changes. Your page updates within a few minutes online, and on the camp TV at its next refresh.");
         return;
       }
-      if (r.error === 'stale') { say('bad', 'This page changed somewhere else. Reload to see the newest version.', true); return; }
+      if (r.error === 'stale') { sayStale(); return; }
+      if (r.error === 'busy') { say('bad', 'Lots of people are saving right now. Tap Save again in a few seconds.'); return; }
       if (r.error === 'bad_input' || r.error === 'too_long') {
         var f = r.field, id = { front_line: 'e-front_line', ask_me_about: 'e-ask_me_about', bio: 'e-bio', labels: 'e-labels', links: 'e-links', 'contact.email': 'e-contact-email', 'contact.phone': 'e-contact-phone' }[f];
         var msg = fieldMessage(f, r.error);
@@ -410,6 +443,9 @@
   $('b-back').addEventListener('click', function () { show('s-edit'); });
   $('b-save').addEventListener('click', save);
   $('b-save2').addEventListener('click', save);
+
+  if (/\bFBA[NV]\/|FBIOS|Instagram|WhatsApp/i.test(navigator.userAgent || '')) { $('inapp').hidden = false; }
+  window.addEventListener('pageshow', function (e) { if (e.persisted) location.reload(); });
 
   /* a saved form link (?k=): read once, strip it from the address bar, then load */
   (function () {

@@ -91,3 +91,9 @@ label.f{display:block;font:700 12px/1 var(--f-type);letter-spacing:.12em;text-tr
 .nf .btn{text-decoration:none;margin-top:12px}
 .fine a{color:var(--rust);font-weight:700}
 .fine a{display:inline-block;min-height:44px;line-height:44px;padding:0 6px;margin:-14px -6px}
+
+/* in-app browser hint, stale choices (2026-11-28) */
+.inapp{text-align:center;font-size:13px;margin:12px 0 0;color:var(--rust);font-weight:600}
+.msg .row2{display:flex;flex-wrap:wrap;gap:8px}
+.msg .row2 .btn{flex:1 1 130px;width:auto;margin-top:10px}
+.msg .btn.ghost{background:var(--warm-white);color:var(--forest)}

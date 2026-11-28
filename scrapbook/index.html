@@ -1042,7 +1042,7 @@ function liveStart(redraw,busy){
   const base=window.SCRAPBOOK_DATA;let pending=null;
   const apply=()=>{if(!pending)return;if(document.querySelector('#kb .a-card')||(busy&&busy())){setTimeout(apply,60000);return}
     try{ingest(pending);redraw()}catch(e){try{ingest(base);redraw()}catch(_){}}pending=null};
-  const pull=()=>{if(navigator.onLine===false)return;const ac=new AbortController(),tm=setTimeout(()=>ac.abort(),15000);
+  const pull=()=>{if(navigator.onLine===false)return;const ac=new AbortController(),tm=setTimeout(()=>ac.abort(),25000);
     fetch(U,{cache:'no-store',signal:ac.signal}).then(r=>r.ok?r.json():null).then(F=>{clearTimeout(tm);const m=liveMerge(base,F);if(m){pending=m;apply()}}).catch(()=>clearTimeout(tm))};
   pull();setInterval(pull,15*60*1000);addEventListener('online',pull);
 }
@@ -1504,12 +1504,17 @@ function loadData(go){
   const skel=()=>{$w.innerHTML='<div class="w-skel" role="status" aria-label="Scrapbook is loading">'+'<i></i>'.repeat(12)+'</div>'};
   const fail=()=>{$w.innerHTML='<div class="w-load">The scrapbook could not load.<br><button type="button" class="w-retry">Try again</button></div>';
     $w.querySelector('.w-retry').addEventListener('click',run)};
+  /* 2026-11-28: last good feed kept in this viewer's own browser; shown at once, fresh feed swaps in */
+  const KEY='scrapbook-feed-v2',good=R=>R&&R.ok===true&&Array.isArray(R.campers);
+  let shown=false;
+  try{const S=JSON.parse(localStorage.getItem(KEY)||'null');if(good(S)){go(S);shown=true}}catch(e){}
   function run(){
-    skel();
-    if(!SCRAPBOOK_FEED)return fail();
-    const ac=new AbortController(),tm=setTimeout(()=>ac.abort(),12000);
+    if(!shown)skel();
+    if(!SCRAPBOOK_FEED){if(!shown)fail();return}
+    const ac=new AbortController(),tm=setTimeout(()=>ac.abort(),25000);
     fetch(SCRAPBOOK_FEED,{cache:'no-store',signal:ac.signal}).then(r=>{if(!r.ok)throw 0;return r.json()})
-      .then(R=>{clearTimeout(tm);go(R)},()=>{clearTimeout(tm);fail()});
+      .then(R=>{clearTimeout(tm);if(!good(R))throw 0;try{localStorage.setItem(KEY,JSON.stringify(R))}catch(e){}go(R);shown=true},
+            ()=>{clearTimeout(tm);if(!shown)fail()});
   }
   run();
 }
