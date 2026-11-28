@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<title>Edit your scrapbook page</title>
+<meta name="description" content="Change your photo, words and links on your Camp Counselor Reunion scrapbook page.">
+<link rel="canonical" href="https://nreaganaill.github.io/camp-counselor-reunion/scrapbook-edit/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://nreaganaill.github.io/camp-counselor-reunion/scrapbook-edit/">
+<meta property="og:title" content="Edit your scrapbook page">
+<meta property="og:description" content="Change your photo, words and links on your Camp Counselor Reunion scrapbook page.">
+<meta property="og:image" content="https://nreaganaill.github.io/camp-counselor-reunion/scrapbook-edit/assets/og/og-scrapbook-edit-v1.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Edit your scrapbook page: a pinned scrapbook card with a round photo frame and a rust pencil, in Spirit Camp colours.">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="../assets/icons/favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" href="../assets/icons/favicon-32.png">
+<link rel="apple-touch-icon" href="../assets/icons/apple-touch-icon.png">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<main class="wrap">
+
+<!-- 1 · email -->
+<section id="s-email" class="screen" aria-labelledby="h-email">
+  <div class="in">
+    <p class="kick">Camp Counselor Scrapbook</p>
+    <h1 class="h" id="h-email">Edit your scrapbook page</h1>
+    <p class="lead">Change your photo, words or links.</p>
+    <form id="f-email" novalidate>
+      <label class="f" for="em">Your login email</label>
+      <input class="inp" id="em" type="email" inputmode="email" autocomplete="email" autocapitalize="off" spellcheck="false">
+      <p class="err" id="e-email" role="alert" hidden></p>
+      <button class="btn" id="b-open" type="submit">Open my page →</button>
+    </form>
+    <p class="fine">Not finding you? Write to spiritcampevents@gmail.com.</p>
+  </div>
+</section>
+
+<!-- 2+3 · editable page -->
+<section id="s-edit" class="screen" aria-label="Your scrapbook page" hidden>
+  <div class="bar"><b>Your scrapbook page</b><button type="button" class="pv" id="b-preview">Preview my page</button></div>
+
+  <div class="card">
+    <div class="ava" id="ava">
+      <img id="ava-img" alt="" hidden>
+      <button type="button" class="cam" id="b-photo" aria-label="Change your photo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>
+      </button>
+      <input type="file" id="file" accept="image/*" hidden>
+    </div>
+    <p class="photo-msg" id="photo-msg" role="status" aria-live="polite"></p>
+    <p class="nm" id="nm"></p>
+
+    <div class="sec"><div class="lbl" id="l-labels">Labels · pick 1 to 3</div></div>
+    <div class="labels" id="labels" role="group" aria-labelledby="l-labels"></div>
+    <p class="err" id="e-labels" role="alert" hidden></p>
+
+    <div class="sec"><label class="lbl" for="front_line">Front line</label></div>
+    <input class="ed" id="front_line" type="text" autocomplete="off" enterkeyhint="done">
+    <div class="cnt"><span></span><b id="c-front_line"></b></div>
+    <p class="err" id="e-front_line" role="alert" hidden></p>
+
+    <div class="sec"><label class="lbl" for="ask_me_about">Ask me about</label></div>
+    <input class="ed c" id="ask_me_about" type="text" autocomplete="off" enterkeyhint="done">
+    <div class="cnt"><span></span><b id="c-ask_me_about"></b></div>
+    <p class="err" id="e-ask_me_about" role="alert" hidden></p>
+  </div>
+
+  <div class="card">
+    <div class="sec" style="margin-top:0"><label class="lbl" for="bio">About you</label></div>
+    <textarea class="ed bio" id="bio" rows="8"></textarea>
+    <div class="cnt"><span></span><b id="c-bio"></b></div>
+    <p class="err" id="e-bio" role="alert" hidden></p>
+
+    <div class="sec"><div class="lbl" id="l-links">Join · follow · find me</div></div>
+    <div id="links" role="group" aria-labelledby="l-links"></div>
+    <button type="button" class="lt addl" id="b-addlink"></button>
+    <p class="err" id="e-links" role="alert" hidden></p>
+  </div>
+
+  <div class="priv">
+    <h2>Your contact details</h2>
+    <p>Private. Only the camp sees these; they never show on your page.</p>
+    <label class="f" for="c-email" style="margin-top:12px">Email</label>
+    <input class="inp" id="c-email" type="email" inputmode="email" autocomplete="off" autocapitalize="off" spellcheck="false">
+    <div class="confirm" id="confirm" hidden>
+      <b id="confirm-q">Use this new email for your login too?</b>
+      <button type="button" class="yn" id="yn-yes" aria-pressed="false">Yes, update it</button>
+      <button type="button" class="yn n" id="yn-no" aria-pressed="false">No</button>
+    </div>
+    <p class="err" id="e-contact-email" role="alert" hidden></p>
+    <label class="f" for="c-phone">Phone</label>
+    <input class="inp" id="c-phone" type="tel" inputmode="tel" autocomplete="off" placeholder="Type a new number to change it">
+    <p class="fine" id="phone-on-file" style="margin-top:6px" hidden></p>
+    <p class="err" id="e-contact-phone" role="alert" hidden></p>
+  </div>
+
+  <div class="msg-slot" id="slot-edit" aria-live="polite"></div>
+  <div class="save"><button class="btn" id="b-save" type="button">Save my page</button></div>
+</section>
+
+<!-- 4 · preview -->
+<section id="s-preview" class="screen" aria-label="Preview" hidden>
+  <div class="in" style="padding-top:20px">
+    <p class="kick" style="text-align:center">How your tile looks on the board</p>
+    <div class="pol">
+      <div class="ava"><img id="pv-img" alt="" hidden></div>
+      <p class="nm" id="pv-nm"></p>
+      <p id="pv-line"></p>
+      <div class="dots" id="pv-dots"></div>
+    </div>
+    <button type="button" class="btn ghost" id="b-back" style="margin-top:28px">← Keep editing</button>
+    <button type="button" class="btn" id="b-save2">Save my page</button>
+    <div class="msg-slot" id="slot-preview" aria-live="polite"></div>
+  </div>
+</section>
+
+</main>
+<script src="app.js"></script>
+</body>
+</html>
