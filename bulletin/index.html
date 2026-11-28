@@ -31,6 +31,14 @@ main{max-width:1120px;margin:0 auto;padding:28px 18px 40px}
 .cta{display:flex;align-items:center;justify-content:space-between;gap:14px;margin:22px 0 0;background:var(--rust);color:#fff;text-decoration:none;
  border-radius:14px;padding:18px 18px 18px 22px;box-shadow:0 5px 0 #8a4a22,0 8px 18px rgba(59,61,60,.25);transition:transform .08s,box-shadow .08s}
 .cta:hover{filter:brightness(1.05)}
+.steps{display:grid;gap:12px;margin-top:22px}
+.stepk{margin:0;font:700 12px/1 var(--f-type);letter-spacing:.14em;text-transform:uppercase;color:var(--walnut)}
+.steps .cta{margin:0;justify-content:flex-start}
+.cta .n{flex:none;width:40px;height:40px;border-radius:50%;background:#fff;color:var(--rust);display:grid;place-items:center;font:italic 800 22px/1 var(--f-head)}
+.cta b small{display:block;margin-top:5px;font:600 15px/1.3 var(--f-body);font-style:normal;opacity:.92}
+.cta .go{margin-left:auto}
+.cta.two{background:var(--warm-white);color:var(--ink);border:2px solid var(--rust);box-shadow:0 5px 0 rgba(124,82,46,.35)}
+.cta.two .n{background:var(--rust);color:#fff}
 .cta:active{transform:translateY(4px);box-shadow:0 1px 0 #8a4a22,0 3px 8px rgba(59,61,60,.25)}
 .cta b{font:italic 800 23px/1.15 var(--f-head)}
 .cta .go{flex:none;width:46px;height:46px;border-radius:50%;background:var(--marigold);color:var(--ink);display:grid;place-items:center;font:700 24px/1 var(--f-body)}
@@ -129,7 +137,7 @@ const CARDS=[
  {p:'b',c:'var(--night-blue)',th:`<span class="th" style="background:#FBE3CF">${PIN}</span>`,t:'Getting to camp',s:'Google Maps directions',id:'directions'},
  {p:'b',c:'var(--magenta)',th:'<span class="th"><span class="emo">🚘</span></span>',t:'Ride Share Board',s:'Offer a seat or find one',id:'rideshare'},
  {p:'ba',c:'var(--walnut)',th:'<span class="th pol"><img src="assets/img/scrapbook-thumb.jpg" alt="Scrapbook preview" width="830" height="600"></span>',t:'The Scrapbook',s:"Contact info and passion projects",id:'scrapbook'},
- {p:'ba',c:'var(--rust)',th:'<span class="th" style="background:#FBE3CF"><svg class="big" viewBox="0 0 40 40"><rect x="9" y="6" width="22" height="28" rx="2" fill="#FFFAF4" stroke="#7C522E" stroke-width="1.6"/><rect x="12" y="9" width="16" height="11" fill="#5764A6"/><circle cx="24" cy="12.5" r="2" fill="#F2B739"/><path d="M14 25h12M14 29h8" stroke="#7C522E" stroke-width="1.5" stroke-linecap="round"/><g transform="rotate(40 30 28)"><rect x="27" y="14" width="6" height="20" rx="1.5" fill="#BC6A37"/><path d="M27 34l3 5 3-5z" fill="#F2B739"/><rect x="27" y="14" width="6" height="3" fill="#A8286B"/></g></svg></span>',t:'Edit your scrapbook page',s:'Change your photo, words or links',id:'scrapbook_edit'},
+ {p:'a',c:'var(--rust)',th:'<span class="th" style="background:#FBE3CF"><svg class="big" viewBox="0 0 40 40"><rect x="9" y="6" width="22" height="28" rx="2" fill="#FFFAF4" stroke="#7C522E" stroke-width="1.6"/><rect x="12" y="9" width="16" height="11" fill="#5764A6"/><circle cx="24" cy="12.5" r="2" fill="#F2B739"/><path d="M14 25h12M14 29h8" stroke="#7C522E" stroke-width="1.5" stroke-linecap="round"/><g transform="rotate(40 30 28)"><rect x="27" y="14" width="6" height="20" rx="1.5" fill="#BC6A37"/><path d="M27 34l3 5 3-5z" fill="#F2B739"/><rect x="27" y="14" width="6" height="3" fill="#A8286B"/></g></svg></span>',t:'Edit your scrapbook page',s:'Change your photo, words or links',id:'scrapbook_edit'},
  {p:'a',c:'#4285F4',th:`<span class="th" style="background:#E6EEFC">${ALBUM}</span>`,t:'Camp photo album',s:'Google Drive · add your photos from camp',id:'photo_album'},
 ];
 const WAYS=[
@@ -154,7 +162,7 @@ document.getElementById('app').innerHTML=`
   <p class="sub">Everything for camp, in one place.</p>
   <div class="sticky" data-p="b"><b>Getting ready</b>Arrive by 5 PM Fri<br>Ends 1 PM Sun</div>
   <div class="sticky after" data-p="a"><b>After camp</b>Leave a review<br>Stay connected</div></div>
- ${link('intake','cta" data-p="b','<b>Submit or update your intake form here</b><span class="go" aria-hidden="true">→</span>')}</div>
+ <div class="steps" data-p="b"><p class="stepk">Two steps, in this order</p>${link('intake','cta','<span class="n" aria-hidden="true">1</span><b>Do your intake form first<small>New, or update your info</small></b><span class="go" aria-hidden="true">→</span>')}${link('scrapbook_edit','cta two','<span class="n" aria-hidden="true">2</span><b>Then edit your scrapbook page<small>Change your photo, words or links</small></b><span class="go" aria-hidden="true">→</span>')}</div></div>
  ${any('b')?'<p class="sec" data-p="b">Read, plan, get there</p>':''}${any('a')?'<p class="sec" data-p="a">Relive it and share it</p>':''}${cards.join('')?`<div class="tiles">${cards.join('')}</div>`:''}
  ${reach('b')}
  ${socB?`<section class="soc"><h2>Follow and tag us</h2>${igH}<div class="sbtns">${socB}</div></section>`:''}

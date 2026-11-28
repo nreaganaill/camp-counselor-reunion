@@ -70,13 +70,14 @@
   function openByEmail(ev) {
     ev.preventDefault();
     var email = $('em').value.trim();
+    $('nf').hidden = true;
     setErr('e-email', '');
     if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { setErr('e-email', "That doesn't look like an email."); return; }
     var b = $('b-open'); b.disabled = true;
     post({ action: 'scrapbook_open', email: email }).then(function (r) {
       b.disabled = false;
       if (r.ok && r.found) { KEY = r.key; fill(r); show('s-edit'); }
-      else if (r.ok) setErr('e-email', "We couldn't find that email. Try the one you registered with, or write to spiritcampevents@gmail.com.");
+      else if (r.ok) $('nf').hidden = false;
       else if (r.error === 'bad_input') setErr('e-email', "That doesn't look like an email.");
       else if (r.error === 'busy') setErr('e-email', 'Too many tries. Please wait a few minutes.');
       else setErr('e-email', GENERIC[r.error] || GENERIC.server);

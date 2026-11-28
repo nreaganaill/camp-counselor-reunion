@@ -32,12 +32,17 @@
     <h1 class="h" id="h-email">Edit your scrapbook page</h1>
     <p class="lead">Change your photo, words or links.</p>
     <form id="f-email" novalidate>
-      <label class="f" for="em">Your login email</label>
+      <label class="f" for="em">Use the email from your intake form</label>
       <input class="inp" id="em" type="email" inputmode="email" autocomplete="email" autocapitalize="off" spellcheck="false">
       <p class="err" id="e-email" role="alert" hidden></p>
       <button class="btn" id="b-open" type="submit">Open my page →</button>
     </form>
-    <p class="fine">Not finding you? Write to spiritcampevents@gmail.com.</p>
+    <p class="fine">Haven't done your intake form yet? <a href="../intake/">Do it first →</a></p>
+    <div class="nf" id="nf" hidden>
+      <p><b>We couldn't find that email.</b> Your scrapbook page starts with your intake form.</p>
+      <a class="btn" href="../intake/">Do your intake form first →</a>
+      <p class="fine">Already did it? Try the email you used there, or write to spiritcampevents@gmail.com.</p>
+    </div>
   </div>
 </section>
 

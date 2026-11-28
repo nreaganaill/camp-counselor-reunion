@@ -84,3 +84,10 @@ label.f{display:block;font:700 12px/1 var(--f-type);letter-spacing:.12em;text-tr
 .dots{display:flex;justify-content:center;gap:6px}.dots i{width:26px;height:26px;border-radius:50%;background:var(--c)}
 @media (min-width:720px){.card,.priv,.msg-slot{margin-left:0;margin-right:0}.in{padding:40px 24px}.bar,.save{padding-left:0;padding-right:0}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}.pol{transform:none}}
+
+/* not-found: send them to the intake form first (2026-11-28) */
+.nf{margin-top:20px;background:#FFF3A8;border-radius:12px;padding:16px;box-shadow:2px 5px 10px rgba(59,61,60,.15)}
+.nf p{margin:0 0 4px}
+.nf .btn{text-decoration:none;margin-top:12px}
+.fine a{color:var(--rust);font-weight:700}
+.fine a{display:inline-block;min-height:44px;line-height:44px;padding:0 6px;margin:-14px -6px}
