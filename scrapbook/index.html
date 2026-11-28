@@ -875,6 +875,12 @@ html[data-view="desktop"] .w-panel{width:50vw;max-width:none;box-shadow:-10px 0 
 html[data-view="desktop"] #web.w-split #wbase,html[data-view="desktop"].w-split #wbase{margin-right:50vw}
 html[data-view="desktop"] .w-split .w-grid,html[data-view="desktop"].w-split .w-grid{grid-template-columns:repeat(auto-fill,minmax(180px,1fr))}
 .w-gifts{margin-top:6px}
+.w-join{margin:4px 0 0;font:600 15px/1.4 var(--f-body);color:inherit;opacity:.85}
+.w-join a{color:var(--magenta);font-weight:700;text-decoration:underline;text-underline-offset:3px;display:inline-block;min-height:24px}
+#web.night .w-join a{color:var(--periwinkle)}
+.a-tile.nopage .w-tjoin{display:block;margin:6px 10px 0;padding:6px 4px;min-height:24px;color:var(--magenta);font:700 14px/1.3 var(--f-body);text-align:center;text-decoration:underline;text-underline-offset:3px}
+#web.night .a-tile.nopage .w-tjoin{color:var(--periwinkle)}
+.w-join a{padding:10px 4px;margin:-10px -4px;min-height:44px;box-sizing:border-box}
 
 </style></head>
 <body>
@@ -1382,7 +1388,7 @@ ${tray}</div>`;
 /* ---------- grid ---------- */
 function paintGrid(){
   const list=C.filter(match);
-  $g.innerHTML=list.length?list.map(c=>aTile(c,W.open===c.i,false)).join(''):'<p class="w-none">Nobody here yet. Pick another one.</p>';
+  $g.innerHTML=list.length?list.map(c=>{const t=aTile(c,W.open===c.i,false);return c.has||!window.SCRAPBOOK_EDIT?t:t.replace('<span class="a-line">page on its way</span>','<span class="a-line">page on its way</span><a class="w-tjoin" href="../intake/">Do your intake form first, then add your page</a>')}).join(''):'<p class="w-none">Nobody here yet. Pick another one.</p>';
   const el=document.getElementById('wsr');if(el)el.textContent=W.sel?list.length+(list.length===1?' camper':' campers')+' shown':'';
 }
 
@@ -1447,7 +1453,7 @@ function shell(){
   const how='';  /* 2026-11-28: How it works is TV-only */
   $w.innerHTML=`<div id="wbase"><div class="w-top" id="wtop"><span class="w-tt">Scrapbook 2026</span><button class="w-night" type="button" data-w="night" aria-pressed="false"></button></div>
 <header class="w-head"><p class="kick">Spirit Camp · Dec 4–6, 2026 · Mendocino coast</p><h1 class="ttl">Camp Counselor Reunion <span class="hl">Scrapbook</span> 2026</h1>
-<p class="w-intro">Tap anyone to open their page.</p><p class="w-count" id="wcount"></p><p class="w-sr" id="wsr" role="status" aria-live="polite"></p>${how}</header>
+<p class="w-intro">Tap anyone to open their page.</p>${window.SCRAPBOOK_EDIT?`<p class="w-join">Not here yet? <a href="../intake/">Do your intake form first</a>, then add your page.</p>`:''}<p class="w-count" id="wcount"></p><p class="w-sr" id="wsr" role="status" aria-live="polite"></p>${how}</header>
 <nav class="w-filter" id="wf" aria-label="Find campers"></nav>
 <main class="w-main"><div class="w-grid" id="wg"></div></main></div>
 <div class="w-scrim" id="ws" data-w="close"></div><aside class="w-panel" id="wp" role="dialog" aria-modal="true"></aside>`;
